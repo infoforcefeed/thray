@@ -42,9 +42,9 @@ Tech involved:
 Scraper
 =======
 
-The Scrapers are distributed, small C++ processes that are responsible for pulling endpoints out of a distributed queue. Scrapers will hit the tumblr API for that data, put it into Riak, mark the username as scraped (with a date?) , stick a new job into the "To Be Processed" queue and move onto the next item in the "To Be Scraped" queue. This should also include any media associated, like images. MP3/videos too, maybe?
+The Scrapers are distributed, small C++ processes that are responsible for pulling endpoints out of a distributed queue. Scrapers will hit the tumblr API for that data, put it into Riak, mark the username as scraped (with metadata?) , stick a new job into the "To Be Processed" queue and move onto the next item in the "To Be Scraped" queue. This should also include any associated media, like images or video.
 
 Processor
 =========
 
-Processors pulled scraped blobs out of Riak and turn them into identified data which goes into Postgres. This includes things like the username, note text, tags, date posted, etc. Processors continually pull blobs from Riak for transformations that will be loaded into Postgres. We should be able to re-populate postgres anytime with data from Riak.
+Processors pull scraped blobs out of Riak and turn them into identified data, which goes into Postgres. This includes things like the username, note text, tags, date posted, etc etc. Processors continually pull blobs from Riak for transformations that will be loaded into Postgres. We should be able to re-populate postgres anytime with data from Riak.
