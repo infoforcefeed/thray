@@ -2,7 +2,9 @@ CPPFLAGS=-std=c++0x -pthread -Wall -Werror -Wshadow -g3 -O2
 INCLUDES=-I./include
 LIBS=-lstdc++
 NAME=thray
-CC=clang++
+ifndef CC
+	CC=gcc
+endif
 
 all: $(NAME)
 
