@@ -20,6 +20,7 @@ namespace Thray {
 		private:
 			// Methods:
 			const char *getBlogUrlForUsername(const std::string &username);
+			unsigned int getPostCountForBlog(const std::string &json);
 			std::vector<std::string> usernames;
 
 			// Everything else:

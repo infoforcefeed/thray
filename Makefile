@@ -18,6 +18,6 @@ clean:
 %.o: ./src/%.cpp
 	$(CC) $(CPPFLAGS) $(INCLUDES) -fpic -c $<
 
-$(NAME): thray.o main.o
+$(NAME): json11.o thray.o main.o
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(NAME) $^ $(LIBS)
 
