@@ -6,16 +6,16 @@
 using namespace std;
 using namespace Thray;
 
-int init() {
+bool init() {
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 
-	return 0;
+	return true;
 }
 
-int cleanup() {
+bool cleanup() {
 	curl_global_cleanup();
 
-	return 0;
+	return true;
 }
 
 int main(int argc, char *argv[]) {
