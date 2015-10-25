@@ -12,11 +12,21 @@ int init() {
 	return 0;
 }
 
+int cleanup() {
+	curl_global_cleanup();
+
+	return 0;
+}
+
 int main(int argc, char *argv[]) {
-	init();
+	if (!init())
+		return 1;
+
 	Scraper scraper;
 
 	scraper.scrape();
+
+	cleanup();
 
 	return 0;
 }

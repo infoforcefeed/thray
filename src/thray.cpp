@@ -4,7 +4,12 @@
 using namespace std;
 using namespace Thray;
 
-Scraper::Scraper() {
+Scraper::Scraper(): curl(nullptr) {
+	curl = curl_easy_init();
+}
+
+Scraper::~Scraper() {
+	curl_easy_cleanup(curl);
 }
 
 const char *Scraper::getBlogUrlForUsername(const std::string &username) {
@@ -18,11 +23,21 @@ const char *Scraper::getBlogUrlForUsername(const std::string &username) {
 }
 
 void Scraper::scrape() {
-	std::string blogUrl(getBlogUrlForUsername("david-meade"));
+	CURLcode res;
+	const char *blogUrl = getBlogUrlForUsername("david-meade");
 
 #ifdef __DARWIN_OS_X_HAUL_SATAN
 	std::cout << "Fuc you" << endl;
 #endif
 	std::cout << "Heres the URL: " << blogUrl << endl;
+
+	curl_easy_setopt(curl, CURLOPT_URL, blogUrl);
+
+	res = curl_easy_perform(curl);
+	if (res != CURLE_OK) {
+		std::cout << "Could not fetch username's endpoint." << endl;
+	}
+
+	curl_easy_reset(curl);
 }
 

@@ -1,6 +1,6 @@
-CPPFLAGS=-std=c++0x -pthread -Wall -Werror -Wshadow -g3 -O0
+CPPFLAGS=-std=c++0x -pthread -Wall -Werror -Wshadow -g3 -O0 `pkg-config --libs --cflags libxml-2.0`
 INCLUDES=-I./include
-LIBS=-lstdc++ -lcurl -loauth
+LIBS=-lstdc++ -lcurl -loauth -lxml2
 NAME=thray
 ifndef CC
 	CC=gcc
