@@ -1,6 +1,6 @@
 CPPFLAGS=-std=c++0x -pthread -Wall -Werror -Wshadow -g3 -O2
 INCLUDES=-I./include
-LIBS=-lstdc++
+LIBS=-lstdc++ -lcurl -loauth
 NAME=thray
 ifndef CC
 	CC=gcc
@@ -18,6 +18,6 @@ clean:
 %.o: ./src/%.cpp
 	$(CC) $(CPPFLAGS) $(INCLUDES) -fpic -c $<
 
-$(NAME): main.o
+$(NAME): thray.o main.o
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(NAME) $^ $(LIBS)
 
