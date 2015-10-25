@@ -18,9 +18,12 @@ namespace Thray {
 			~Scraper();
 			void scrape();
 		private:
+
+			void makeRequest(const char *url, std::string *writeBugger);
 			// Methods:
 			const char *getBlogUrlForUsername(const std::string &username);
 			unsigned int getPostCountForBlog(const std::string &json);
+			const char *getPostPageUrl(const std::string url, unsigned int page);
 			std::vector<std::string> usernames;
 
 			// Everything else:

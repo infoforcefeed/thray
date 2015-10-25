@@ -35,28 +35,39 @@ unsigned int Scraper::getPostCountForBlog(const std::string &json) {
 	return json1["response"]["blog"]["posts"].int_value();
 }
 
-void Scraper::scrape() {
-	CURLcode res;
-	std::string responseBuffer;
-	const char *blogUrl = getBlogUrlForUsername("david-meade");
-#ifdef __DARWIN_OS_X_HAUL_SATAN
-	std::cout << "Fuc you" << endl;
-#endif
-	std::cout << "Heres the URL: " << blogUrl << endl;
+const char *Scraper::getPostPageUrl(const std::string url, unsigned int page) {
+	static char buf[256] = {0};
+	memset(buf, '\0', sizeof(buf));
 
-	curl_easy_setopt(curl, CURLOPT_URL, blogUrl);
+	snprintf(buf, sizeof(buf), "%s/page/%u", url.c_str(), page);
+
+	return buf;
+}
+
+void Scraper::makeRequest(const char *url, std::string *writeBugger) {
+	curl_easy_setopt(curl, CURLOPT_URL, url);
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fyckYou);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, writeBugger);
 
-	res = curl_easy_perform(curl);
-	if (res != CURLE_OK) {
-		std::cout << "Could not fetch username's endpoint." << endl;
-	}
-
+	curl_easy_perform(curl);
 	curl_easy_reset(curl);
+}
+
+void Scraper::scrape() {
+	std::string responseBuffer;
+	const char *blogUrl = getBlogUrlForUsername("david-meade");
+
+	makeRequest(blogUrl, &responseBuffer);
 
 	unsigned int postCount = getPostCountForBlog(responseBuffer);
+	unsigned int i = 1;
+	while (postCount-- > 0) {
+		const char *what = getPostPageUrl(blogUrl, i++);
+		std::string reponseBugger;
+		makeRequest(what, &reponseBugger);
+		cout << reponseBugger;
+	}
 	cout << postCount << endl;
 }
 
