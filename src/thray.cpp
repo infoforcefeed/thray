@@ -14,12 +14,13 @@ Scraper::~Scraper() {
 	curl_easy_cleanup(curl);
 }
 
-const char *Scraper::getAPIBlogUrlForUsername(const std::string &username) {
+const char *Scraper::getAPIBlogUrlForUsername(const std::string &username, unsigned int page) {
 	static char buf[256] = {0};
 	memset(buf, '\0', sizeof(buf));
 
-	snprintf(buf, sizeof(buf), "https://api.tumblr.com/v2/blog/%s.tumblr.com/posts?api_key=%s&notes_info=true&reblog_info=true&filter=text",
-			username.c_str(), API_KEY);
+	unsigned int offset = 20*page;
+	snprintf(buf, sizeof(buf), "https://api.tumblr.com/v2/blog/%s.tumblr.com/posts?api_key=%s&notes_info=true&reblog_info=true&filter=text&offset=%u\n",
+			username.c_str(), API_KEY, offset);
 
 	return buf;
 }
@@ -40,29 +41,21 @@ void Scraper::makeRequest(const char *url, std::string *writeBugger) {
 }
 
 void Scraper::scrape() {
+	bool done = false;
+	unsigned int page = 0;
 	std::string responseBuffer;
-	const char *APIBlogUrl = getAPIBlogUrlForUsername("david-meade");
+	while (!done) {
+		responseBuffer.clear();
+		const char *APIBlogUrl = getAPIBlogUrlForUsername("david-meade", page++);
+		makeRequest(APIBlogUrl, &responseBuffer);
 
-	makeRequest(APIBlogUrl, &responseBuffer);
-
-	std::string error;
-	Json resJson = Json::parse(responseBuffer, error)["response"];
-	cout << resJson.string_value()<< endl;
-	Json blogJson = resJson["blog"];
-	Json::array postsJson = resJson["posts"].array_items();
-	unsigned int postCount = resJson["total_posts"].int_value();
-	for(int i = 0; i < postCount; i++) {
-		Json::object postObj = postsJson[i].object_items();
-		cout << postObj["blog_name"].string_value() <<endl;
-	}
-
-//	unsigned int i = 1;
-//	while (postCount-- > 0) {
-//		const char *what = getPostPageUrl(blogUrl, i++);
-//		std::string reponseBugger;
-//		makeRequest(what, &reponseBugger);
-//		cout << reponseBugger << endl;
-//	}
-//	cout << postCount << endl;
+		std::string error;
+		Json resJson = Json::parse(responseBuffer, error)["response"];
+		Json blogJson = resJson["blog"];
+		Json::array postsJson = resJson["posts"].array_items();
+		for(int i = 0; i < postsJson.size(); i++) {
+			Json::object postObj = postsJson[i].object_items();
+		}
+		done = postsJson.size() < 20;
+	};
 }
-
