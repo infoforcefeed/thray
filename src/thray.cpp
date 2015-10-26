@@ -24,6 +24,15 @@ const char *Scraper::getAPIBlogUrlForUsername(const std::string &username) {
 	return buf;
 }
 
+const char *Scraper::getBlogUrlForUsername(const std::string &username) {
+	static char buf[256] = {0};
+	memset(buf, '\0', sizeof(buf));
+
+	snprintf(buf, sizeof(buf), "http://%s.tumblr.com/", username.c_str());
+
+	return buf;
+}
+
 static int fyckYou(char *data, size_t size, size_t nmemb, std::string *writerData) {
 	writerData->append(data, size*nmemb);
 	return size * nmemb;
@@ -56,9 +65,10 @@ void Scraper::makeRequest(const char *url, std::string *writeBugger) {
 
 void Scraper::scrape() {
 	std::string responseBuffer;
-	const char *blogUrl = getAPIBlogUrlForUsername("david-meade");
+	const char *blogUrl = getBlogUrlForUsername("david-meade");
+	const char *APIBlogUrl = getAPIBlogUrlForUsername("david-meade");
 
-	makeRequest(blogUrl, &responseBuffer);
+	makeRequest(APIBlogUrl, &responseBuffer);
 
 	unsigned int postCount = getPostCountForBlog(responseBuffer);
 	unsigned int i = 1;
