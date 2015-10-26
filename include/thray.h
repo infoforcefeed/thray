@@ -4,7 +4,6 @@
 #include <curl/curl.h>
 #include <iostream>
 #include <libxml/HTMLparser.h>
-#include <oauth.h>
 #include <string>
 #include <vector>
 
