@@ -14,7 +14,7 @@ Scraper::~Scraper() {
 	curl_easy_cleanup(curl);
 }
 
-const char *Scraper::getBlogUrlForUsername(const std::string &username) {
+const char *Scraper::getAPIBlogUrlForUsername(const std::string &username) {
 	static char buf[256] = {0};
 	memset(buf, '\0', sizeof(buf));
 
@@ -56,7 +56,7 @@ void Scraper::makeRequest(const char *url, std::string *writeBugger) {
 
 void Scraper::scrape() {
 	std::string responseBuffer;
-	const char *blogUrl = getBlogUrlForUsername("david-meade");
+	const char *blogUrl = getAPIBlogUrlForUsername("david-meade");
 
 	makeRequest(blogUrl, &responseBuffer);
 
@@ -66,7 +66,7 @@ void Scraper::scrape() {
 		const char *what = getPostPageUrl(blogUrl, i++);
 		std::string reponseBugger;
 		makeRequest(what, &reponseBugger);
-		cout << reponseBugger;
+		cout << reponseBugger << endl;
 	}
 	cout << postCount << endl;
 }
