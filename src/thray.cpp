@@ -53,7 +53,7 @@ void Scraper::scrape() {
 		Json resJson = Json::parse(responseBuffer, error)["response"];
 		Json blogJson = resJson["blog"];
 		Json::array postsJson = resJson["posts"].array_items();
-		for(int i = 0; i < postsJson.size(); i++) {
+		for(unsigned int i = 0; i < postsJson.size(); i++) {
 			Json::object postObj = postsJson[i].object_items();
 		}
 		done = postsJson.size() < 20;
